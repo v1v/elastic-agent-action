@@ -7,6 +7,7 @@ export interface IElasticAgentVersionInfo {
   downloadUrl: string;
   version: string;
   fileName: string;
+  folderName: string;
 }
 
 export async function getElasticAgent(version: string, arch = os.arch()) {
@@ -40,13 +41,15 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
 async function getInfo(version: string, arch: string): Promise<IElasticAgentVersionInfo | null> {
   const platform = getPlatform();
   const architecture = getArch(arch, platform);
-  const fileName = `elastic-agent-${version}-${platform}-${architecture}.tar.gz`;
+  const folderName = `elastic-agent-${version}-${platform}-${architecture}`;
+  const fileName = `${folderName}.tar.gz`;
   const downloadUrl = `https://artifacts.elastic.co/downloads/beats/elastic-agent/${fileName}`;
 
   return <IElasticAgentVersionInfo>{
     downloadUrl: downloadUrl,
     version: version,
-    fileName: fileName
+    fileName: fileName,
+    folderName: folderName
   };
 }
 
@@ -66,7 +69,9 @@ async function installElasticAgentVersion(info: IElasticAgentVersionInfo): Promi
   core.info(`Successfully extracted ElasticAgent to ${extPath}`);
 
   // TODO: to cache the installation?
-  return extPath;
+
+  // Installation path requires to append the folder name.
+  return path.join(extPath, info.folderName);
 }
 
 export async function extractElasticAgentArchive(archivePath: string): Promise<string> {
