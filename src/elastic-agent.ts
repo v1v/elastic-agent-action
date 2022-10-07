@@ -41,4 +41,3 @@ export async function loginStandard(fleetUrl: string, enrollmentToken: string): 
       core.info(`Enrollment Succeeded!`);
     });
 }
-
