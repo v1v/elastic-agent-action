@@ -22,19 +22,27 @@ test('enroll calls exec Linux/MacOS', async () => {
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
   await enroll('/tmp', fleetUrl, token);
-  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'], {
-    input: Buffer.from(token),
-    silent: true,
-    ignoreReturnCode: true
-  });
+  expect(execSpy).toHaveBeenCalledWith(
+    `sudo`,
+    ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'],
+    {
+      input: Buffer.from(token),
+      silent: true,
+      ignoreReturnCode: true
+    }
+  );
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
   await enroll('/tmp', fleetUrl, token);
-  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'], {
-    input: Buffer.from(token),
-    silent: true,
-    ignoreReturnCode: true
-  });
+  expect(execSpy).toHaveBeenCalledWith(
+    `sudo`,
+    ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'],
+    {
+      input: Buffer.from(token),
+      silent: true,
+      ignoreReturnCode: true
+    }
+  );
 });
 
 test('unenroll calls exec Linux/MacOS', async () => {
@@ -56,7 +64,11 @@ test('unenroll calls exec Linux/MacOS', async () => {
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
   await unenroll('/tmp');
-  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['launchctl', 'unload', '/Library/LaunchDaemons/co.elastic.elastic-agent.plist'], {
-    ignoreReturnCode: true
-  });
+  expect(execSpy).toHaveBeenCalledWith(
+    `sudo`,
+    ['launchctl', 'unload', '/Library/LaunchDaemons/co.elastic.elastic-agent.plist'],
+    {
+      ignoreReturnCode: true
+    }
+  );
 });

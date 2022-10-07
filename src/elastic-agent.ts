@@ -45,7 +45,7 @@ export async function unenroll(installDir: string): Promise<void> {
     case 'linux':
       unenrollArgs.push('service', 'elastic-agent', 'stop');
       break;
-      // TODO: windows
+    // TODO: windows
   }
   await exec
     .getExecOutput(command, unenrollArgs, {
