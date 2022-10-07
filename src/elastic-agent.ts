@@ -18,7 +18,7 @@ export async function enroll(installDir: string, fleetUrl: string, enrollmentTok
   enrollArgs.push('--enrollment-token', enrollmentToken);
   enrollArgs.push('--tag', 'github-actions'); // TODO: add more tags
 
-  core.info(`Enrolling into Fleet...${enrollArgs}`);
+  core.info(`Enrolling into Fleet...`);
 
   await exec
     .getExecOutput('sudo', enrollArgs, {
