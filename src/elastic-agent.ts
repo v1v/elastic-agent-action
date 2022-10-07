@@ -4,23 +4,11 @@ import * as installer from './installer';
 import os from 'os';
 
 export async function install(version: string): Promise<string> {
-  if (!version) {
-    throw new Error('version required');
-  }
   const installDir = await installer.getElasticAgent(version);
   return installDir;
 }
 
 export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
-  if (!enrollmentToken) {
-    throw new Error('enrollmentToken required');
-  }
-  if (!fleetUrl) {
-    throw new Error('fleetUrl required');
-  }
-  if (!installDir) {
-    throw new Error('installDir required');
-  }
   // TODO: windows
   const loginArgs: Array<string> = ['./elastic-agent'];
   loginArgs.push('--non-interactive');
@@ -57,6 +45,7 @@ export async function unenroll(installDir: string): Promise<void> {
     case 'linux':
       unenrollArgs.push('service', 'elastic-agent', 'stop');
       break;
+      // TODO: windows
   }
   await exec
     .getExecOutput(command, unenrollArgs, {

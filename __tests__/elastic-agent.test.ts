@@ -1,11 +1,12 @@
 import {expect, jest, test} from '@jest/globals';
-import {loginStandard, unenroll} from '../src/elastic-agent';
+import {enroll, unenroll} from '../src/elastic-agent';
 import * as path from 'path';
 import * as exec from '@actions/exec';
+import osm = require('os');
 
 process.env['RUNNER_TEMP'] = path.join(__dirname, 'runner');
 
-test('loginStandard calls exec', async () => {
+test('enroll calls exec Linux/MacOS', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const execSpy = jest.spyOn(exec, 'getExecOutput').mockImplementation(async () => {
@@ -16,20 +17,27 @@ test('loginStandard calls exec', async () => {
     };
   });
 
-  const username = 'dbowie';
-  const password = 'groundcontrol';
-  const registry = 'https://ghcr.io';
+  const token = 'my-token';
+  const fleetUrl = 'https://my-fleet';
 
-  await loginStandard(registry, username);
+  jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
+  await enroll('/tmp', fleetUrl, token);
+  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'], {
+    input: Buffer.from(token),
+    silent: true,
+    ignoreReturnCode: true
+  });
 
-  expect(execSpy).toHaveBeenCalledWith(`docker`, ['login', '--password-stdin', '--username', username, registry], {
-    input: Buffer.from(password),
+  jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
+  await enroll('/tmp', fleetUrl, token);
+  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['./elastic-agent', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'], {
+    input: Buffer.from(token),
     silent: true,
     ignoreReturnCode: true
   });
 });
 
-test('logout calls exec', async () => {
+test('unenroll calls exec Linux/MacOS', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const execSpy = jest.spyOn(exec, 'getExecOutput').mockImplementation(async () => {
@@ -40,11 +48,15 @@ test('logout calls exec', async () => {
     };
   });
 
-  const registry = 'https://ghcr.io';
+  jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
+  await unenroll('/tmp');
+  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['service', 'elastic-agent', 'stop'], {
+    ignoreReturnCode: true
+  });
 
-  await unenroll(registry);
-
-  expect(execSpy).toHaveBeenCalledWith(`docker`, ['logout', registry], {
+  jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
+  await unenroll('/tmp');
+  expect(execSpy).toHaveBeenCalledWith(`sudo`, ['launchctl', 'unload', '/Library/LaunchDaemons/co.elastic.elastic-agent.plist'], {
     ignoreReturnCode: true
   });
 });

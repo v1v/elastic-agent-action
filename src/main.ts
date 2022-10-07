@@ -10,6 +10,17 @@ export async function run(): Promise<void> {
     stateHelper.setFleetUrl(input.fleetUrl);
     stateHelper.setLogout(input.logout);
 
+    // Validate action inputs
+    if (!input.version) {
+      throw new Error('version required');
+    }
+    if (!input.enrollmentToken) {
+      throw new Error('enrollmentToken required');
+    }
+    if (!input.fleetUrl) {
+      throw new Error('fleetUrl required');
+    }
+
     // Install Elastic Agent
     const installDir = await elasticAgent.install(input.version);
     stateHelper.setInstallDir(installDir);

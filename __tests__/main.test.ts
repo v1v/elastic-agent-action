@@ -7,33 +7,23 @@ import * as stateHelper from '../src/state-helper';
 
 import * as core from '@actions/core';
 
-test('errors without fleetUrl and enrollmentToken', async () => {
+test('errors without version', async () => {
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
   process.env['INPUT_LOGOUT'] = 'true'; // default value
   const coreSpy = jest.spyOn(core, 'setFailed');
 
   await run();
-  expect(coreSpy).toHaveBeenCalledWith('enrollmentToken required');
+  expect(coreSpy).toHaveBeenCalledWith('version required');
 });
 
-test('successful with fleetUrl and enrollmentToken', async () => {
+test('errors without enrollmentToken', async () => {
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
-  const setRegistrySpy = jest.spyOn(stateHelper, 'setFleetUrl');
-  const setLogoutSpy = jest.spyOn(stateHelper, 'setLogout');
-  const dockerSpy = jest.spyOn(elasticAgent, 'enroll').mockImplementation(jest.fn());
+  process.env['INPUT_LOGOUT'] = 'true'; // default value
+  const coreSpy = jest.spyOn(core, 'setFailed');
 
-  const fleetUrl = 'dbowie';
-  process.env[`INPUT_FLEET_URL`] = fleetUrl;
-
-  const enrollmentToken = 'groundcontrol';
-  process.env[`INPUT_ENROLLMENT_TOKEN`] = enrollmentToken;
-
-  const logout = false;
-  process.env['INPUT_LOGOUT'] = String(logout);
+  const version = '8.4.3';
+  process.env[`INPUT_VERSION`] = version;
 
   await run();
-
-  expect(setRegistrySpy).toHaveBeenCalledWith('');
-  expect(setLogoutSpy).toHaveBeenCalledWith(logout);
-  expect(dockerSpy).toHaveBeenCalledWith(fleetUrl, enrollmentToken);
+  expect(coreSpy).toHaveBeenCalledWith('enrollmentToken required');
 });
