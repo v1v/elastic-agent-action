@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 
-export async function enroll(fleetUrl: string, enrollmentToken: string): Promise<void> {
+export async function enroll(fleetUrl: string, enrollmentToken: string, version: string): Promise<void> {
   await loginStandard(fleetUrl, enrollmentToken);
 }
 

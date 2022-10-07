@@ -8,7 +8,7 @@ export async function run(): Promise<void> {
     const input: context.Inputs = context.getInputs();
     stateHelper.setFleetUrl(input.fleetUrl);
     stateHelper.setLogout(input.logout);
-    await elasticAgent.enroll(input.fleetUrl, input.enrollmentToken);
+    await elasticAgent.enroll(input.fleetUrl, input.enrollmentToken, input.version);
   } catch (error) {
     core.setFailed(error.message);
   }

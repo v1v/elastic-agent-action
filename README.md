@@ -39,6 +39,7 @@ jobs:
         with:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
+          version: "8.4.3"
 ```
 
 ## Customizing
@@ -51,6 +52,7 @@ Following inputs can be used as `step.with` keys
 |-------------------|---------|-----------------------------|------------------------------------|
 | `fleetUrl`       | String  |                             | Server address of Fleet Server.    |
 | `enrollmentToken`| String  |                             | Enrollment token used to log against the Fleet Server |
+| `version`| String  |                             | What Elastic Agent to be installed. |
 | `logout`          | Bool    | `true`                      | Log out from the Fleet Server at the end of a job |
 
 ## Keep up-to-date with GitHub Dependabot
