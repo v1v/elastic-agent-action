@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as installer from './installer';
+import * as path from 'path';
 import os from 'os';
 
 export async function install(version: string): Promise<string> {
@@ -10,16 +11,17 @@ export async function install(version: string): Promise<string> {
 
 export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
   // TODO: windows
-  const loginArgs: Array<string> = ['./elastic-agent'];
-  loginArgs.push('--non-interactive');
-  loginArgs.push('--url', fleetUrl);
-  loginArgs.push('--enrollment-token', enrollmentToken);
-  loginArgs.push('--tag', 'github-actions'); // TODO: add more tags
+  const enrollArgs: Array<string> = [path.join(installDir, './elastic-agent')];
+  enrollArgs.push('install');
+  enrollArgs.push('--non-interactive');
+  enrollArgs.push('--url', fleetUrl);
+  enrollArgs.push('--enrollment-token', enrollmentToken);
+  enrollArgs.push('--tag', 'github-actions'); // TODO: add more tags
 
-  core.info(`Enrolling into Fleet...`);
+  core.info(`Enrolling into Fleet...${enrollArgs}`);
 
   await exec
-    .getExecOutput('sudo', loginArgs, {
+    .getExecOutput('sudo', enrollArgs, {
       ignoreReturnCode: true,
       silent: true,
       input: Buffer.from(enrollmentToken) // TODO: exclude fleetUrl
