@@ -8,12 +8,12 @@ to the public under the [project's open source license](LICENSE).
 ## Submitting a pull request
 
 1. [Fork](https://github.com/v1v/elastic-agent-action/fork) and clone the repository
-2. Configure and install the dependencies: `yarn install`
+2. Configure and install the dependencies: `make configure`
 3. Create a new branch: `git checkout -b my-branch-name`
 4. Make your changes
-5. Make sure the tests pass: `docker buildx bake test`
-6. Format code and build javascript artifacts: `docker buildx bake pre-checkin`
-7. Validate all code has correctly formatted and built: `docker buildx bake validate`
+5. Make sure the tests pass: either `make test`
+6. Format code and build javascript artifacts: `make build`
+7. Validate all code has correctly formatted and built: `make validate`
 8. Push to your fork and [submit a pull request](https://github.com/v1v/elastic-agent-action/compare)
 9. Pat your self on the back and wait for your pull request to be reviewed and merged.
 

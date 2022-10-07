@@ -1,3 +1,6 @@
+configure:
+	yarn install
+
 test:
 	docker buildx bake test
 
