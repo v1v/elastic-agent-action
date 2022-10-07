@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *'
+  push:
+    branches:
+      - 'main'
+      - 'releases/v*'
+
+jobs:
+  logout:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        logout:
+          - false
+          - true
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Elastic Agent
+        uses: ./
+        with:
+          fleet-url: ${{ secrets.FLEET_URL }}
+          enrollment-token: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
+          logout: ${{ matrix.logout }}
+
+  dockerhub:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Elastic Agent
+        uses: ./
+        with:
+          fleet-url: ${{ secrets.FLEET_URL }}
+          enrollment-token: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}

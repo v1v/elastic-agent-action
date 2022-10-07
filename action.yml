@@ -1,0 +1,24 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+name: 'Elastic Agent'
+description: 'GitHub Action to install Elastic Agent to add monitoring for logs, metrics, and other types of data to the GitHub runner'
+author: 'v1v'
+branding:
+  icon: 'anchor'
+  color: 'blue'
+
+inputs:
+  fleetUrl:
+    required: true
+    description: 'Server address of Fleet Server'
+  enrollmentToken:
+    required: true
+    description: 'Enrollment token used to log against the Fleet Server'
+  logout:
+    required: false
+    description: 'Log out from the Fleet Server at the end of a job'
+    default: 'true'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+  post: 'dist/index.js'
