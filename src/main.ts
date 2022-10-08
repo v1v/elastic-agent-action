@@ -36,7 +36,7 @@ async function logout(): Promise<void> {
   if (!stateHelper.logout) {
     return;
   }
-  await elasticAgent.unenroll(stateHelper.installDir);
+  await elasticAgent.unenroll();
 }
 
 if (!stateHelper.IsPost) {

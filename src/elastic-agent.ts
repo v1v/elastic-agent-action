@@ -43,10 +43,7 @@ export async function enroll(installDir: string, fleetUrl: string, enrollmentTok
     });
 }
 
-export async function unenroll(installDir: string): Promise<void> {
-  if (!installDir) {
-    throw new Error('installDir required');
-  }
+export async function unenroll(): Promise<void> {
   let command = 'sudo';
   const unenrollArgs: Array<string> = [];
   switch (os.platform()) {

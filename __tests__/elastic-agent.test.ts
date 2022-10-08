@@ -120,7 +120,7 @@ test('unenroll calls exec Linux', async () => {
   });
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
-  await unenroll('/tmp');
+  await unenroll();
   expect(execSpy).toHaveBeenCalledWith(`sudo`, ['service', 'elastic-agent', 'stop'], {
     ignoreReturnCode: true
   });
@@ -138,7 +138,7 @@ test('unenroll calls exec MacOS', async () => {
   });
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
-  await unenroll('/tmp');
+  await unenroll();
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
     ['launchctl', 'unload', '/Library/LaunchDaemons/co.elastic.elastic-agent.plist'],
@@ -160,7 +160,7 @@ test('unenroll calls exec Windows', async () => {
   });
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'win32');
-  await unenroll('c:\\tmp');
+  await unenroll();
   expect(execSpy).toHaveBeenCalledWith('net', ['stop', 'Elastic Agent'], {
     ignoreReturnCode: true
   });
