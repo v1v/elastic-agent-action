@@ -57,8 +57,10 @@ export async function unenroll(installDir: string): Promise<void> {
       unenrollArgs.push('service', 'elastic-agent', 'stop');
       break;
     case 'win32':
-      command = 'Stop-Service';
-      unenrollArgs.push('Elastic', 'Agent');
+      // Stop-Service is not found in the windows context
+      // use net stop instead
+      command = 'net';
+      unenrollArgs.push('stop', 'Elastic Agent');
       break;
   }
   await exec

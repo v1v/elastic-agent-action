@@ -161,7 +161,7 @@ test('unenroll calls exec Windows', async () => {
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'win32');
   await unenroll('c:\\tmp');
-  expect(execSpy).toHaveBeenCalledWith('Stop-Service', ['Elastic', 'Agent'], {
+  expect(execSpy).toHaveBeenCalledWith('net', ['stop', 'Elastic Agent'], {
     ignoreReturnCode: true
   });
 });
