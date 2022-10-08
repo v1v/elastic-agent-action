@@ -70,15 +70,16 @@ async function installElasticAgentVersion(info: IElasticAgentVersionInfo): Promi
   const extPath = await extractElasticAgentArchive(downloadPath);
   core.info(`Successfully extracted ElasticAgent to ${extPath}`);
 
-  // Debug
-  fs.readdirSync(path.join(extPath, info.folderName)).forEach(file => {
-    core.info(` Debug file 2 ${file}`);
-  });
-
-  // TODO: to cache the installation?
-
   // Installation path requires to append the folder name.
-  return path.join(extPath, info.folderName);
+  const extPathWithFolderName = path.join(extPath, info.folderName);
+  if (core.isDebug()) {
+    core.info(`Listing content for ${extPathWithFolderName}`);
+    fs.readdirSync(extPathWithFolderName).forEach(file => {
+      core.debug(`- ${file}`);
+    });
+  }
+
+  return extPathWithFolderName;
 }
 
 export async function extractElasticAgentArchive(archivePath: string): Promise<string> {
