@@ -2,6 +2,7 @@ import * as tc from '@actions/tool-cache';
 import * as core from '@actions/core';
 import * as path from 'path';
 import os from 'os';
+import fs from 'fs';
 
 export interface IElasticAgentVersionInfo {
   downloadUrl: string;
@@ -41,8 +42,9 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
 async function getInfo(version: string, arch: string): Promise<IElasticAgentVersionInfo | null> {
   const platform = getPlatform();
   const architecture = getArch(arch, platform);
+  const isWindows = os.platform() === 'win32';
   const folderName = `elastic-agent-${version}-${platform}-${architecture}`;
-  const fileName = `${folderName}.tar.gz`;
+  const fileName = isWindows ? `${folderName}.zip` : `${folderName}.tar.gz`;
   const downloadUrl = `https://artifacts.elastic.co/downloads/beats/elastic-agent/${fileName}`;
 
   return <IElasticAgentVersionInfo>{
@@ -67,6 +69,11 @@ async function installElasticAgentVersion(info: IElasticAgentVersionInfo): Promi
   core.info('Extracting ElasticAgent...');
   const extPath = await extractElasticAgentArchive(downloadPath);
   core.info(`Successfully extracted ElasticAgent to ${extPath}`);
+
+  // Debug
+  fs.readdirSync(path.join(extPath, info.folderName)).forEach(file => {
+    core.info(` Debug file 2 ${file}`);
+  });
 
   // TODO: to cache the installation?
 

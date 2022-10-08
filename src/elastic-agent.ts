@@ -10,8 +10,18 @@ export async function install(version: string): Promise<string> {
 }
 
 export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
-  // TODO: windows
-  const enrollArgs: Array<string> = [path.join(installDir, './elastic-agent')];
+  let command = 'sudo';
+  const enrollArgs: Array<string> = [];
+  switch (os.platform()) {
+    case 'win32':
+      // path.join with windows separator if possible
+      command = `${installDir}\\elastic-agent.exe`;
+      break;
+    default:
+      enrollArgs.push(path.join(installDir, 'elastic-agent'));
+      break;
+  }
+
   enrollArgs.push('install');
   enrollArgs.push('--non-interactive');
   enrollArgs.push('--url', fleetUrl);
@@ -19,9 +29,8 @@ export async function enroll(installDir: string, fleetUrl: string, enrollmentTok
   enrollArgs.push('--tag', 'github-actions'); // TODO: add more tags
 
   core.info(`Enrolling into Fleet...`);
-
   await exec
-    .getExecOutput('sudo', enrollArgs, {
+    .getExecOutput(command, enrollArgs, {
       ignoreReturnCode: true,
       silent: true,
       input: Buffer.from(enrollmentToken) // TODO: exclude fleetUrl
@@ -38,7 +47,7 @@ export async function unenroll(installDir: string): Promise<void> {
   if (!installDir) {
     throw new Error('installDir required');
   }
-  const command = 'sudo';
+  let command = 'sudo';
   const unenrollArgs: Array<string> = [];
   switch (os.platform()) {
     case 'darwin':
@@ -47,7 +56,10 @@ export async function unenroll(installDir: string): Promise<void> {
     case 'linux':
       unenrollArgs.push('service', 'elastic-agent', 'stop');
       break;
-    // TODO: windows
+    case 'win32':
+      command = 'Stop-Service';
+      unenrollArgs.push('Elastic', 'Agent');
+      break;
   }
   await exec
     .getExecOutput(command, unenrollArgs, {
