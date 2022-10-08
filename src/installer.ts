@@ -38,7 +38,6 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
   return downloadPath;
 }
 
-// OK
 async function getInfo(version: string, arch: string): Promise<IElasticAgentVersionInfo | null> {
   const platform = getPlatform();
   const architecture = getArch(arch, platform);
@@ -55,7 +54,6 @@ async function getInfo(version: string, arch: string): Promise<IElasticAgentVers
   };
 }
 
-// OK
 async function installElasticAgentVersion(info: IElasticAgentVersionInfo): Promise<string> {
   core.info(`Acquiring ${info.version} from ${info.downloadUrl}`);
 
@@ -116,7 +114,7 @@ export function getArch(arch: string, plat: string): string {
       break;
     case 'arm64':
       if (plat === 'darwin') {
-        plat = 'aarch64';
+        arch = 'aarch64';
       }
       break;
     default:
