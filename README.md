@@ -4,9 +4,14 @@
 [![Test workflow](https://img.shields.io/github/workflow/status/v1v/elastic-agent-action/test?label=test&logo=github&style=flat-square)](https://github.com/v1v/elastic-agent-action/actions?workflow=test)
 [![Codecov](https://img.shields.io/codecov/c/github/v1v/elastic-agent-action?logo=codecov&style=flat-square)](https://codecov.io/gh/v1v/elastic-agent-action)
 
+___
+
+**NOTE:** This repository is still under active development.
+___
+
 ## About
 
-GitHub Action to install Elastic Agent to add monitoring for logs, metrics, and other types of data to the GitHub runner.
+GitHub Action to install [Elastic Agent](https://www.elastic.co/elastic-agent) to add monitoring for logs, metrics, and other types of data to the GitHub runner.
 
 ___
 
