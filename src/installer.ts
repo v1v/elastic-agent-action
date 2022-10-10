@@ -19,7 +19,7 @@ export interface IElasticAgentVersionInfo {
 export async function getElasticAgent(version: string, arch = os.arch()) {
   const osPlat: string = os.platform();
 
-  let versionToSearch: string = version;
+  let versionToSearch: string | null = version;
   if (versionToSearch === 'latest') {
     core.info('Attempting to resolve the latest version...');
     try {
