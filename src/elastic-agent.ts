@@ -142,7 +142,7 @@ export async function setHostname(name: string): Promise<void> {
       break;
   }
 
-  core.info(`Setting Hostname...`);
+  core.info(`Setting Hostname '${name}'...`);
   await exec
     .getExecOutput(command, enrollArgs, {
       ignoreReturnCode: true,
