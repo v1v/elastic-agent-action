@@ -14,14 +14,14 @@ export async function enroll(
   installDir: string,
   fleetUrl: string,
   enrollmentToken: string,
-  name: string
+  agentName: string
 ): Promise<void> {
   let previousName = null;
 
   // Set Elastic Agent name if required
-  if (name.length !== 0) {
+  if (agentName.length !== 0) {
     previousName = await getHostname();
-    await setHostname(name);
+    await setHostname(agentName);
   }
 
   // Enroll the Elastic Agent
@@ -104,7 +104,22 @@ export function getDefaultElasticAgentName(): string {
 }
 
 export async function getHostname(): Promise<string> {
-  return 'tbc';
+  let command = 'hostname';
+
+  core.info(`Setting Elastic Agent name...`);
+  await exec
+    .getExecOutput(command, [], {
+      ignoreReturnCode: true,
+      silent: true
+    })
+    .then(res => {
+      if (res.stderr.length > 0 && res.exitCode != 0) {
+        throw new Error(res.stderr.trim());
+      }
+      core.info(`Elastic Agent name retrieved!`);
+      return res.stdout;
+    });
+  return '';
 }
 
 export async function setHostname(name: string): Promise<void> {
@@ -132,12 +147,12 @@ export async function setHostname(name: string): Promise<void> {
     .getExecOutput(command, enrollArgs, {
       ignoreReturnCode: true,
       silent: true,
-      input: Buffer.from(name) // TODO: exclude fleetUrl
+      input: Buffer.from(name)
     })
     .then(res => {
       if (res.stderr.length > 0 && res.exitCode != 0) {
         throw new Error(res.stderr.trim());
       }
-      core.info(`Elastic Agent name Succeeded!`);
+      core.info(`Elastic Agent name ${name} changed!`);
     });
 }
