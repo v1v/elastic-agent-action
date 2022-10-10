@@ -2,10 +2,9 @@ import * as core from '@actions/core';
 import * as httpm from '@actions/http-client';
 import * as tc from '@actions/tool-cache';
 import * as path from 'path';
+import * as semver from 'semver';
 import fs from 'fs';
 import os from 'os';
-
-const semverClean = require('semver/functions/clean')
 
 export interface IElasticAgentReleaseVersion {
   tag_name: string;
@@ -26,7 +25,7 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
     try {
       const resolvedVersion = await getLatestVersion();
       if (resolvedVersion) {
-        versionToSearch = semverClean(resolvedVersion);
+        versionToSearch = semver.clean(resolvedVersion);
         core.info(`Resolved as '${versionToSearch}'`);
       } else {
         throw new Error(`Failed to get the latest version ${versionToSearch}`);
