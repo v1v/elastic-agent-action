@@ -53,11 +53,9 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
   return downloadPath;
 }
 
-export async function getReleaseVersions(
-  dlUrl: string
-): Promise<IElasticAgentReleaseVersion[] | null> {
+export async function getReleaseVersions(dlUrl: string): Promise<IElasticAgentReleaseVersion[] | null> {
   // this returns versions descending so latest is first
-  let http: httpm.HttpClient = new httpm.HttpClient('elastic-agent', [], {
+  const http: httpm.HttpClient = new httpm.HttpClient('elastic-agent', [], {
     allowRedirects: true,
     maxRedirects: 3
   });
@@ -65,10 +63,8 @@ export async function getReleaseVersions(
 }
 
 export async function getLatestVersion(): Promise<string | undefined> {
-  const dlUrl: string = 'https://api.github.com/repos/elastic/elastic-agent/releases';
-  let candidates: IElasticAgentReleaseVersion[] | null = await module.exports.getReleaseVersions(
-    dlUrl
-  );
+  const dlUrl = 'https://api.github.com/repos/elastic/elastic-agent/releases';
+  const candidates: IElasticAgentReleaseVersion[] | null = await module.exports.getReleaseVersions(dlUrl);
   if (!candidates) {
     throw new Error(`GitHub release url did not return results`);
   }
