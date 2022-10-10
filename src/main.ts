@@ -22,7 +22,10 @@ export async function run(): Promise<void> {
     }
 
     // Get Agent Name
-    const agentName = !input.name ? elasticAgent.getDefaultElasticAgentName() : input.name;
+    let agentName = elasticAgent.getDefaultElasticAgentName();
+    if (input.name) {
+      agentName = input.name;
+    }
 
     // Install Elastic Agent
     const installDir = await elasticAgent.install(input.version);
