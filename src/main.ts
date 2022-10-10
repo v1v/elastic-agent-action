@@ -21,12 +21,16 @@ export async function run(): Promise<void> {
       throw new Error('fleetUrl required');
     }
 
+    // Get Agent Name
+    const agentName = !input.name ? elasticAgent.getDefaultElasticAgentName() : input.name;
+
     // Install Elastic Agent
     const installDir = await elasticAgent.install(input.version);
     stateHelper.setInstallDir(installDir);
 
     // Enroll the runner
-    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken);
+    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, agentName);
+
   } catch (error) {
     core.setFailed(error.message);
   }

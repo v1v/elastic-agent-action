@@ -17,6 +17,9 @@ inputs:
     required: false
     description: 'What Elastic Agent Version to be installed'
     default: 'latest'
+  name:
+    required: false
+    description: 'The name of the Elastic Agent'
   logout:
     required: false
     description: 'Log out from the Fleet Server at the end of a job'

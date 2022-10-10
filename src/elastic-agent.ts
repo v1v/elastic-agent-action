@@ -1,3 +1,4 @@
+import * as github from '@actions/github';
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as installer from './installer';
@@ -9,7 +10,25 @@ export async function install(version: string): Promise<string> {
   return installDir;
 }
 
-export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
+export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string, name: string): Promise<void> {
+  let previousName = null;
+
+  // Set Elastic Agent name if required
+  if (name.length !== 0) {
+    previousName = await getHostname();
+    await setHostname(name);
+  }
+
+  // Enroll the Elastic Agent
+  await enrollOnly(installDir, fleetUrl, enrollmentToken);
+
+  // Revert Elastic Agent name if hostname
+  if (previousName) {
+    await setHostname(previousName);
+  }
+}
+
+export async function enrollOnly(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
   let command = 'sudo';
   const enrollArgs: Array<string> = [];
   switch (os.platform()) {
@@ -68,5 +87,52 @@ export async function unenroll(): Promise<void> {
       if (res.stderr.length > 0 && res.exitCode != 0) {
         core.warning(res.stderr.trim());
       }
+    });
+}
+
+export function getDefaultElasticAgentName(): string {
+  // default repoName_jobName_runId
+  const githubJobName = github.context.job;
+  const githubRunId = github.context.runId;
+  const repoName = github.context.repo.repo;
+  return `${repoName}_${githubJobName}_${githubRunId}`;
+}
+
+export async function getHostname(): Promise<string> {
+  return 'tbc';
+}
+
+export async function setHostname(name: string): Promise<void> {
+  let command = 'sudo';
+  const enrollArgs: Array<string> = [];
+  switch (os.platform()) {
+    case 'win32':
+      command = 'wmic';
+      enrollArgs.push('computersystem', 'where', 'name="%computername%"');
+      enrollArgs.push('call', 'rename', `name="${name}"`);
+      break;
+    case 'linux':
+      enrollArgs.push('hostname');
+      enrollArgs.push(name);
+      break;
+    default:
+      enrollArgs.push('scutil');
+      enrollArgs.push('--set', 'HostName');
+      enrollArgs.push(name);
+      break;
+  }
+
+  core.info(`Setting Elastic Agent name...`);
+  await exec
+    .getExecOutput(command, enrollArgs, {
+      ignoreReturnCode: true,
+      silent: true,
+      input: Buffer.from(name) // TODO: exclude fleetUrl
+    })
+    .then(res => {
+      if (res.stderr.length > 0 && res.exitCode != 0) {
+        throw new Error(res.stderr.trim());
+      }
+      core.info(`Elastic Agent name Succeeded!`);
     });
 }
