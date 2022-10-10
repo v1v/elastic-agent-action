@@ -10,7 +10,12 @@ export async function install(version: string): Promise<string> {
   return installDir;
 }
 
-export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string, name: string): Promise<void> {
+export async function enroll(
+  installDir: string,
+  fleetUrl: string,
+  enrollmentToken: string,
+  name: string
+): Promise<void> {
   let previousName = null;
 
   // Set Elastic Agent name if required

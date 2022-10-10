@@ -30,7 +30,6 @@ export async function run(): Promise<void> {
 
     // Enroll the runner
     await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, agentName);
-
   } catch (error) {
     core.setFailed(error.message);
   }
