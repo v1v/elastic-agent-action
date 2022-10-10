@@ -40,7 +40,7 @@ jobs:
     steps:
       -
         name: Install and Configure Elastic agent
-        uses: v1v/elastic-agent-action@v2
+        uses: v1v/elastic-agent-action@main
         with:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
@@ -55,9 +55,9 @@ Following inputs can be used as `step.with` keys
 
 | Name              | Type    | Default                     | Description                        |
 |-------------------|---------|-----------------------------|------------------------------------|
-| `fleetUrl`       | String  |                             | Server address of Fleet Server.    |
-| `enrollmentToken`| String  |                             | Enrollment token used to log against the Fleet Server |
-| `version`| String  |                             | What Elastic Agent to be installed. |
+| `fleetUrl`        | String  |                             | Server address of Fleet Server.    |
+| `enrollmentToken` | String  |                             | Enrollment token used to log against the Fleet Server |
+| `version`         | String  | `latest`                    | What Elastic Agent to be installed. Will default to get the latest release. |
 | `logout`          | Bool    | `true`                      | Log out from the Fleet Server at the end of a job |
 
 ## Keep up-to-date with GitHub Dependabot

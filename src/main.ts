@@ -11,8 +11,8 @@ export async function run(): Promise<void> {
     stateHelper.setLogout(input.logout);
 
     // Validate action inputs
-    if (!input.version) {
-      throw new Error('version required');
+    if (input.version.length === 0) {
+      throw new Error('version cannot be empty');
     }
     if (!input.enrollmentToken) {
       throw new Error('enrollmentToken required');
