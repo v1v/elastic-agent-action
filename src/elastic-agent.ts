@@ -96,11 +96,10 @@ export async function unenroll(): Promise<void> {
 }
 
 export function getDefaultElasticAgentName(): string {
-  // default repoName_jobName_runId
-  const githubJobName = github.context.job;
+  // default runId_runNumber
+  const githubRunNumber = github.context.runNumber;
   const githubRunId = github.context.runId;
-  const repoName = github.context.repo.repo;
-  return `${repoName}_${githubJobName}_${githubRunId}`;
+  return `${githubRunId}_${githubRunNumber}`;
 }
 
 export async function getHostname(): Promise<string> {
