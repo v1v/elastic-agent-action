@@ -104,7 +104,7 @@ export function getDefaultElasticAgentName(): string {
 }
 
 export async function getHostname(): Promise<string> {
-  let command = 'hostname';
+  const command = 'hostname';
 
   core.info(`Setting Elastic Agent name...`);
   await exec
