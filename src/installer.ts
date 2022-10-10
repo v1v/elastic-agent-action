@@ -77,7 +77,7 @@ export async function getLatestVersion(): Promise<string | undefined> {
   return candidates[0].tag_name;
 }
 
-async function getInfo(version: string, arch: string): Promise<IElasticAgentVersionInfo | null> {
+async function getInfo(version: string | null, arch: string): Promise<IElasticAgentVersionInfo | null> {
   const platform = getPlatform();
   const architecture = getArch(arch, platform);
   const isWindows = os.platform() === 'win32';
