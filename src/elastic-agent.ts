@@ -99,7 +99,7 @@ export function getDefaultElasticAgentName(): string {
   // default runId_runNumber
   const githubRunNumber = github.context.runNumber;
   const githubRunId = github.context.runId;
-  return `${githubRunId}_${githubRunNumber}`;
+  return `${githubRunId}.${githubRunNumber}`;
 }
 
 export async function getHostname(): Promise<string> {
