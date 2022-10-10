@@ -1,19 +1,16 @@
 import {expect, jest, test} from '@jest/globals';
-import osm = require('os');
-
-import {run} from '../src/main';
-import * as elasticAgent from '../src/elastic-agent';
-import * as stateHelper from '../src/state-helper';
-
 import * as core from '@actions/core';
+import osm = require('os');
+import {run} from '../src/main';
 
-test('errors without version', async () => {
+test('errors with empty version', async () => {
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
   process.env['INPUT_LOGOUT'] = 'true'; // default value
+  process.env['INPUT_VERSION'] = '';
   const coreSpy = jest.spyOn(core, 'setFailed');
 
   await run();
-  expect(coreSpy).toHaveBeenCalledWith('version required');
+  expect(coreSpy).toHaveBeenCalledWith('version cannot be empty');
 });
 
 test('errors without enrollmentToken', async () => {

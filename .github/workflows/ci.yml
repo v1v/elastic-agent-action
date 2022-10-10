@@ -31,10 +31,9 @@ jobs:
         with:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
-          version: "8.4.1"
           logout: ${{ matrix.logout }}
 
-  elasticAgent:
+  elasticAgentVersion:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

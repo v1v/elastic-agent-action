@@ -1,9 +1,14 @@
-import * as tc from '@actions/tool-cache';
 import * as core from '@actions/core';
+import * as httpm from '@actions/http-client';
+import * as tc from '@actions/tool-cache';
 import * as path from 'path';
-import os from 'os';
+import * as semver from 'semver';
 import fs from 'fs';
+import os from 'os';
 
+export interface IElasticAgentReleaseVersion {
+  tag_name: string;
+}
 export interface IElasticAgentVersionInfo {
   downloadUrl: string;
   version: string;
@@ -14,31 +19,65 @@ export interface IElasticAgentVersionInfo {
 export async function getElasticAgent(version: string, arch = os.arch()) {
   const osPlat: string = os.platform();
 
-  core.info(`Attempting to download ${version}...`);
+  let versionToSearch: string | null = version;
+  if (versionToSearch === 'latest') {
+    core.info('Attempting to resolve the latest version...');
+    try {
+      const resolvedVersion = await getLatestVersion();
+      if (resolvedVersion) {
+        versionToSearch = semver.clean(resolvedVersion);
+        core.info(`Resolved as '${versionToSearch}'`);
+      } else {
+        throw new Error(`Failed to get the latest version ${versionToSearch}`);
+      }
+    } catch (err) {
+      throw new Error(`Failed to download version ${versionToSearch}: ${err}`);
+    }
+  }
+
+  core.info(`Attempting to download ${versionToSearch}...`);
   let downloadPath = '';
   let info: IElasticAgentVersionInfo | null = null;
 
   //
   // Download from artifacts.elastic.co
   //
-  info = await getInfo(version, arch);
-  // Search for latest if that's supported in the future
+  info = await getInfo(versionToSearch, arch);
   if (!info) {
     throw new Error(
-      `Unable to find Elastic Agent version '${version}' for platform ${osPlat} and architecture ${arch}.`
+      `Unable to find Elastic Agent version '${versionToSearch}' for platform ${osPlat} and architecture ${arch}.`
     );
   }
 
   try {
     downloadPath = await installElasticAgentVersion(info);
   } catch (err) {
-    throw new Error(`Failed to download version ${version}: ${err}`);
+    throw new Error(`Failed to download version ${versionToSearch}: ${err}`);
   }
 
   return downloadPath;
 }
 
-async function getInfo(version: string, arch: string): Promise<IElasticAgentVersionInfo | null> {
+export async function getReleaseVersions(dlUrl: string): Promise<IElasticAgentReleaseVersion[] | null> {
+  // this returns versions descending so latest is first
+  const http: httpm.HttpClient = new httpm.HttpClient('elastic-agent', [], {
+    allowRedirects: true,
+    maxRedirects: 3
+  });
+  return (await http.getJson<IElasticAgentReleaseVersion[]>(dlUrl)).result;
+}
+
+export async function getLatestVersion(): Promise<string | undefined> {
+  const dlUrl = 'https://api.github.com/repos/elastic/elastic-agent/releases';
+  const candidates: IElasticAgentReleaseVersion[] | null = await module.exports.getReleaseVersions(dlUrl);
+  if (!candidates) {
+    throw new Error(`GitHub release url did not return results`);
+  }
+
+  return candidates[0].tag_name;
+}
+
+async function getInfo(version: string | null, arch: string): Promise<IElasticAgentVersionInfo | null> {
   const platform = getPlatform();
   const architecture = getArch(arch, platform);
   const isWindows = os.platform() === 'win32';

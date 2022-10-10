@@ -14,8 +14,9 @@ inputs:
     required: true
     description: 'Enrollment token used to log against the Fleet Server'
   version:
-    required: true
+    required: false
     description: 'What Elastic Agent Version to be installed'
+    default: 'latest'
   logout:
     required: false
     description: 'Log out from the Fleet Server at the end of a job'
