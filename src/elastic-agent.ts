@@ -142,7 +142,7 @@ export async function setHostname(name: string): Promise<void> {
       break;
   }
 
-  core.info(`Setting Elastic Agent name...`);
+  core.info(`Setting Hostname...`);
   await exec
     .getExecOutput(command, enrollArgs, {
       ignoreReturnCode: true,
