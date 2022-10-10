@@ -29,7 +29,8 @@
     "@actions/exec": "^1.1.1",
     "@actions/http-client": "^2.0.1",
     "@actions/io": "^1.1.2",
-    "@actions/tool-cache": "^1.5.5"
+    "@actions/tool-cache": "^1.5.5",
+    "semver": "^7.3.8"
   },
   "devDependencies": {
     "@types/node": "^16.11.26",

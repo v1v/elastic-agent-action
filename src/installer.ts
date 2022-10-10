@@ -5,6 +5,8 @@ import * as path from 'path';
 import fs from 'fs';
 import os from 'os';
 
+const semverClean = require('semver/functions/clean')
+
 export interface IElasticAgentReleaseVersion {
   tag_name: string;
 }
@@ -21,12 +23,16 @@ export async function getElasticAgent(version: string, arch = os.arch()) {
   let versionToSearch: string = version;
   if (versionToSearch === 'latest') {
     core.info('Attempting to resolve the latest version...');
-    const resolvedVersion = await getLatestVersion();
-    if (resolvedVersion) {
-      versionToSearch = resolvedVersion;
-      core.info(`Resolved as '${versionToSearch}'`);
-    } else {
-      throw new Error(`Failed to get the latest version ${versionToSearch}`);
+    try {
+      const resolvedVersion = await getLatestVersion();
+      if (resolvedVersion) {
+        versionToSearch = semverClean(resolvedVersion);
+        core.info(`Resolved as '${versionToSearch}'`);
+      } else {
+        throw new Error(`Failed to get the latest version ${versionToSearch}`);
+      }
+    } catch (err) {
+      throw new Error(`Failed to download version ${versionToSearch}: ${err}`);
     }
   }
 
