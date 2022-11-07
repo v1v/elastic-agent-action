@@ -130,6 +130,15 @@ export async function setHostname(name: string): Promise<void> {
       // see https://gist.github.com/timnew/2373475
       command = (await io.which('pwsh', false)) || (await io.which('powershell', true));
       enrollArgs.push(
+        '-NoLogo',
+        '-Sta',
+        '-NoProfile',
+        '-NonInteractive',
+        '-ExecutionPolicy',
+        'Unrestricted',
+        '-Command'
+      );
+      enrollArgs.push(
         'Remove-ItemProperty',
         '-path',
         '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"',
@@ -196,6 +205,7 @@ export async function setHostname(name: string): Promise<void> {
         '-value',
         name
       );
+      core.debug(`Using powershell at path: ${command}`)
       break;
     case 'linux':
       enrollArgs.push('hostname');
@@ -210,7 +220,7 @@ export async function setHostname(name: string): Promise<void> {
 
   core.info(`Setting Hostname '${name}'...`);
   await exec
-    .getExecOutput(command, enrollArgs, {
+    .getExecOutput(`"${command}"`, enrollArgs, {
       ignoreReturnCode: true,
       silent: true,
       input: Buffer.from(name)
