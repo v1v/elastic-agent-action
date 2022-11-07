@@ -124,27 +124,20 @@ export async function getHostname(): Promise<string> {
 
 export async function setHostname(name: string): Promise<void> {
   let command = 'sudo';
-  const enrollArgs: Array<string> = [];
+  const hostnameArgs: Array<string> = [];
   switch (os.platform()) {
     case 'win32': {
       const pwshPath = await io.which('pwsh', false);
+      hostnameArgs.push('-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Unrestricted');
       if (pwshPath) {
-        // see https://gist.github.com/timnew/2373475
         command = pwshPath;
-        enrollArgs.push('-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-Command');
       } else {
         command = await io.which('powershell', true);
-        enrollArgs.push(
-          '-NoLogo',
-          '-Sta',
-          '-NoProfile',
-          '-NonInteractive',
-          '-ExecutionPolicy',
-          'Unrestricted',
-          '-Command'
-        );
+        hostnameArgs.push('-Sta');
       }
-      enrollArgs.push(
+      hostnameArgs.push('-Command');
+      // see https://gist.github.com/timnew/2373475
+      hostnameArgs.push(
         `Remove-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
@@ -152,7 +145,7 @@ export async function setHostname(name: string): Promise<void> {
         `"Hostname"`,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Remove-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
@@ -160,7 +153,7 @@ export async function setHostname(name: string): Promise<void> {
         `"NV Hostname"`,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\Computername"`,
@@ -170,7 +163,7 @@ export async function setHostname(name: string): Promise<void> {
         name,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\ActiveComputername"`,
@@ -180,7 +173,7 @@ export async function setHostname(name: string): Promise<void> {
         name,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
@@ -190,7 +183,7 @@ export async function setHostname(name: string): Promise<void> {
         name,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
@@ -199,7 +192,7 @@ export async function setHostname(name: string): Promise<void> {
         name,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"`,
@@ -209,7 +202,7 @@ export async function setHostname(name: string): Promise<void> {
         name,
         `;`
       );
-      enrollArgs.push(
+      hostnameArgs.push(
         `Set-ItemProperty`,
         `-path`,
         `"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"`,
@@ -222,19 +215,19 @@ export async function setHostname(name: string): Promise<void> {
       break;
     }
     case 'linux':
-      enrollArgs.push('hostname');
-      enrollArgs.push(name);
+      hostnameArgs.push('hostname');
+      hostnameArgs.push(name);
       break;
     default:
-      enrollArgs.push('scutil');
-      enrollArgs.push('--set', 'HostName');
-      enrollArgs.push(name);
+      hostnameArgs.push('scutil');
+      hostnameArgs.push('--set', 'HostName');
+      hostnameArgs.push(name);
       break;
   }
 
   core.info(`Setting Hostname '${name}'...`);
   await exec
-    .getExecOutput(`"${command}"`, enrollArgs, {
+    .getExecOutput(`"${command}"`, hostnameArgs, {
       ignoreReturnCode: true,
       silent: true,
       input: Buffer.from(name)
