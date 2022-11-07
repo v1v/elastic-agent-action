@@ -1,6 +1,7 @@
 import * as github from '@actions/github';
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
+import * as io from '@actions/io';
 import * as installer from './installer';
 import * as path from 'path';
 import os from 'os';
@@ -126,9 +127,16 @@ export async function setHostname(name: string): Promise<void> {
   const enrollArgs: Array<string> = [];
   switch (os.platform()) {
     case 'win32':
-      command = 'wmic';
-      enrollArgs.push('computersystem', 'where', 'name="%computername%"');
-      enrollArgs.push('call', 'rename', `name="${name}"`);
+      // see https://gist.github.com/timnew/2373475
+      command = (await io.which('pwsh', false)) || (await io.which('powershell', true));
+      enrollArgs.push('Remove-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"Hostname"');
+      enrollArgs.push('Remove-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"NV Hostname"');
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\Computername"', '-name', '"Computername"', '-value', name);
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\ActiveComputername"', '-name', '"Computername"', '-value', name);
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"Hostname"', '-value', name);
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"NV Hostname" -value', name);
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"', '-name', '"AltDefaultDomainName"', '-value', name);
+      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"', '-name', '"DefaultDomainName"', '-value', name);
       break;
     case 'linux':
       enrollArgs.push('hostname');
