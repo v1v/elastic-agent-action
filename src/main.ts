@@ -22,6 +22,12 @@ export async function run(): Promise<void> {
       throw new Error('fleetUrl required');
     }
 
+    // Get Agent Name
+    let agentName = elasticAgent.getDefaultElasticAgentName();
+    if (input.agentName) {
+      agentName = input.agentName;
+    }
+
     // Install Elastic Agent
     const installDir = await elasticAgent.install(input.version);
     stateHelper.setInstallDir(installDir);
@@ -31,7 +37,7 @@ export async function run(): Promise<void> {
     const tags = semver.gte(input.version, '8.3.0') ? ',foo' : '';
 
     // Enroll the runner
-    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, tags);
+    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, agentName, tags);
   } catch (error) {
     core.setFailed(error.message);
   }
