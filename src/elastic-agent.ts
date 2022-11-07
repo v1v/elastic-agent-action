@@ -35,7 +35,12 @@ export async function enroll(
   }
 }
 
-export async function enrollOnly(installDir: string, fleetUrl: string, enrollmentToken: string, tags: string): Promise<void> {
+export async function enrollOnly(
+  installDir: string,
+  fleetUrl: string,
+  enrollmentToken: string,
+  tags: string
+): Promise<void> {
   let command = 'sudo';
   const enrollArgs: Array<string> = [];
   switch (os.platform()) {
