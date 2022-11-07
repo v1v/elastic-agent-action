@@ -58,7 +58,7 @@ Following inputs can be used as `step.with` keys
 | `fleetUrl`        | String  |                             | Server address of Fleet Server.    |
 | `enrollmentToken` | String  |                             | Enrollment token used to log against the Fleet Server |
 | `version`         | String  | `latest`                    | What Elastic Agent to be installed. Will default to get the latest release. |
-| `name`            | String  |                             | What Elastic Agent name. If empty, it will use the current hostname. |
+| `name`            | String  | `${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ID}` | What Elastic Agent name. If empty, it will use the current hostname. |
 | `logout`          | Bool    | `true`                      | Log out from the Fleet Server at the end of a job |
 
 ## Keep up-to-date with GitHub Dependabot
