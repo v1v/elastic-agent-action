@@ -149,14 +149,16 @@ export async function setHostname(name: string): Promise<void> {
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
         `-name`,
-        `"Hostname"`
+        `"Hostname"`,
+        `;`
       );
       enrollArgs.push(
         `Remove-ItemProperty`,
         `-path`,
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
         `-name`,
-        `"NV Hostname"`
+        `"NV Hostname"`,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
@@ -165,7 +167,8 @@ export async function setHostname(name: string): Promise<void> {
         `-name`,
         `"Computername"`,
         `-value`,
-        name
+        name,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
@@ -174,7 +177,8 @@ export async function setHostname(name: string): Promise<void> {
         `-name`,
         `"Computername"`,
         `-value`,
-        name
+        name,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
@@ -183,7 +187,8 @@ export async function setHostname(name: string): Promise<void> {
         `-name`,
         `"Hostname"`,
         `-value`,
-        name
+        name,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
@@ -191,7 +196,8 @@ export async function setHostname(name: string): Promise<void> {
         `"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"`,
         `-name`,
         `"NV Hostname" -value`,
-        name
+        name,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
@@ -200,7 +206,8 @@ export async function setHostname(name: string): Promise<void> {
         `-name`,
         `"AltDefaultDomainName"`,
         `-value`,
-        name
+        name,
+        `;`
       );
       enrollArgs.push(
         `Set-ItemProperty`,
