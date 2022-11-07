@@ -21,7 +21,7 @@ test('enroll calls exec Linux', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('/tmp', fleetUrl, token);
+  await enroll('/tmp', fleetUrl, token, '');
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
     [
@@ -59,7 +59,7 @@ test('enroll calls exec MacOS', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('/tmp', fleetUrl, token);
+  await enroll('/tmp', fleetUrl, token, ',foo');
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
     [
@@ -71,7 +71,7 @@ test('enroll calls exec MacOS', async () => {
       '--enrollment-token',
       token,
       '--tag',
-      'github-actions'
+      'github-actions,foo'
     ],
     {
       input: Buffer.from(token),
@@ -96,10 +96,10 @@ test('enroll calls exec Windows', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('c:\\temp', fleetUrl, token);
+  await enroll('c:\\temp', fleetUrl, token, 'foo');
   expect(execSpy).toHaveBeenCalledWith(
     'c:\\temp\\elastic-agent.exe',
-    ['install', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'],
+    ['install', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions,foo'],
     {
       input: Buffer.from(token),
       silent: true,

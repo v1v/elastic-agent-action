@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as context from './context';
 import * as elasticAgent from './elastic-agent';
 import * as stateHelper from './state-helper';
+import * as semver from 'semver';
 
 export async function run(): Promise<void> {
   try {
@@ -25,8 +26,12 @@ export async function run(): Promise<void> {
     const installDir = await elasticAgent.install(input.version);
     stateHelper.setInstallDir(installDir);
 
+    // Gather tags
+    // TODO: gather tags based on the OS
+    const tags = semver.gte(input.version, '8.3.0') ? ',foo' : '';
+
     // Enroll the runner
-    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken);
+    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, tags);
   } catch (error) {
     core.setFailed(error.message);
   }

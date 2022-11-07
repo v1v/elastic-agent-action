@@ -9,7 +9,7 @@ export async function install(version: string): Promise<string> {
   return installDir;
 }
 
-export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
+export async function enroll(installDir: string, fleetUrl: string, enrollmentToken: string, tags: string): Promise<void> {
   let command = 'sudo';
   const enrollArgs: Array<string> = [];
   switch (os.platform()) {
@@ -26,7 +26,7 @@ export async function enroll(installDir: string, fleetUrl: string, enrollmentTok
   enrollArgs.push('--non-interactive');
   enrollArgs.push('--url', fleetUrl);
   enrollArgs.push('--enrollment-token', enrollmentToken);
-  enrollArgs.push('--tag', 'github-actions'); // TODO: add more tags
+  enrollArgs.push('--tag', `github-actions${tags}`);
 
   core.info(`Enrolling into Fleet...`);
   await exec
