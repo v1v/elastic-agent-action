@@ -1,12 +1,12 @@
 import {expect, jest, test} from '@jest/globals';
-import {enroll, unenroll} from '../src/elastic-agent';
+import {enrollOnly, unenroll} from '../src/elastic-agent';
 import * as path from 'path';
 import * as exec from '@actions/exec';
 import osm = require('os');
 
 process.env['RUNNER_TEMP'] = path.join(__dirname, 'runner');
 
-test('enroll calls exec Linux', async () => {
+test('enrollOnly calls exec Linux', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const execSpy = jest.spyOn(exec, 'getExecOutput').mockImplementation(async () => {
@@ -21,7 +21,7 @@ test('enroll calls exec Linux', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('/tmp', fleetUrl, token);
+  await enrollOnly('/tmp', fleetUrl, token);
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
     [
@@ -43,7 +43,7 @@ test('enroll calls exec Linux', async () => {
   );
 });
 
-test('enroll calls exec MacOS', async () => {
+test('enrollOnly calls exec MacOS', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const execSpy = jest.spyOn(exec, 'getExecOutput').mockImplementation(async () => {
@@ -59,7 +59,7 @@ test('enroll calls exec MacOS', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('/tmp', fleetUrl, token);
+  await enrollOnly('/tmp', fleetUrl, token);
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
     [
@@ -81,7 +81,7 @@ test('enroll calls exec MacOS', async () => {
   );
 });
 
-test('enroll calls exec Windows', async () => {
+test('enrollOnly calls exec Windows', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const execSpy = jest.spyOn(exec, 'getExecOutput').mockImplementation(async () => {
@@ -96,7 +96,7 @@ test('enroll calls exec Windows', async () => {
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
-  await enroll('c:\\temp', fleetUrl, token);
+  await enrollOnly('c:\\temp', fleetUrl, token);
   expect(execSpy).toHaveBeenCalledWith(
     'c:\\temp\\elastic-agent.exe',
     ['install', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions'],
