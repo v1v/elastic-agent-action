@@ -53,3 +53,4 @@ jobs:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
           version: "8.4.1"
+          name: "${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ID}"
