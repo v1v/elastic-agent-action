@@ -129,14 +129,73 @@ export async function setHostname(name: string): Promise<void> {
     case 'win32':
       // see https://gist.github.com/timnew/2373475
       command = (await io.which('pwsh', false)) || (await io.which('powershell', true));
-      enrollArgs.push('Remove-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"Hostname"');
-      enrollArgs.push('Remove-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"NV Hostname"');
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\Computername"', '-name', '"Computername"', '-value', name);
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\ActiveComputername"', '-name', '"Computername"', '-value', name);
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"Hostname"', '-value', name);
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"', '-name', '"NV Hostname" -value', name);
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"', '-name', '"AltDefaultDomainName"', '-value', name);
-      enrollArgs.push('Set-ItemProperty', '-path', '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"', '-name', '"DefaultDomainName"', '-value', name);
+      enrollArgs.push(
+        'Remove-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"',
+        '-name',
+        '"Hostname"'
+      );
+      enrollArgs.push(
+        'Remove-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"',
+        '-name',
+        '"NV Hostname"'
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\Computername"',
+        '-name',
+        '"Computername"',
+        '-value',
+        name
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Computername\\ActiveComputername"',
+        '-name',
+        '"Computername"',
+        '-value',
+        name
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"',
+        '-name',
+        '"Hostname"',
+        '-value',
+        name
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters"',
+        '-name',
+        '"NV Hostname" -value',
+        name
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"',
+        '-name',
+        '"AltDefaultDomainName"',
+        '-value',
+        name
+      );
+      enrollArgs.push(
+        'Set-ItemProperty',
+        '-path',
+        '"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"',
+        '-name',
+        '"DefaultDomainName"',
+        '-value',
+        name
+      );
       break;
     case 'linux':
       enrollArgs.push('hostname');
