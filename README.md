@@ -20,6 +20,7 @@ ___
 * [Customizing](#customizing)
   * [inputs](#inputs)
 * [Keep up-to-date with GitHub Dependabot](#keep-up-to-date-with-github-dependabot)
+* [Fleet UI](#fleet-ui)
 
 ## Usage
 
@@ -76,3 +77,9 @@ updates:
     schedule:
       interval: "daily"
 ```
+
+## Fleet UI
+
+Every single runner will be presented as below in the Elastic Fleet UI.
+
+![image info](docs/images/fleet-ui.png)
