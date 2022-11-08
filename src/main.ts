@@ -32,7 +32,7 @@ export async function run(): Promise<void> {
     stateHelper.setInstallDir(installDir);
 
     // Enroll the runner
-    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, agentName);
+    await elasticAgent.enroll(installDir, input.fleetUrl, input.enrollmentToken, agentName, input.version);
   } catch (error) {
     core.setFailed(error.message);
   }

@@ -11,6 +11,8 @@ on:
   pull_request:
     branches:
       - 'main'
+env:
+  VERSION: 8.5.0
 
 jobs:
   logout:
@@ -32,7 +34,7 @@ jobs:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
           logout: ${{ matrix.logout }}
-          version: "8.4.1"
+          version: ${{ env.VERSION }}
 
   elasticAgentVersion:
     runs-on: ${{ matrix.os }}
@@ -53,4 +55,4 @@ jobs:
         with:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
-          version: "8.4.1"
+          version: ${{ env.VERSION }}

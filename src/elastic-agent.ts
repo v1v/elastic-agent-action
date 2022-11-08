@@ -4,6 +4,7 @@ import * as exec from '@actions/exec';
 import * as io from '@actions/io';
 import * as installer from './installer';
 import * as path from 'path';
+import * as semver from 'semver';
 import os from 'os';
 
 export async function install(version: string): Promise<string> {
@@ -15,7 +16,8 @@ export async function enroll(
   installDir: string,
   fleetUrl: string,
   enrollmentToken: string,
-  agentName: string
+  agentName: string,
+  version: string
 ): Promise<void> {
   let previousName = null;
 
@@ -26,7 +28,7 @@ export async function enroll(
   }
 
   // Enroll the Elastic Agent
-  await enrollOnly(installDir, fleetUrl, enrollmentToken);
+  await enrollOnly(installDir, fleetUrl, enrollmentToken, version);
 
   // Revert Elastic Agent name if hostname
   if (previousName) {
@@ -34,7 +36,12 @@ export async function enroll(
   }
 }
 
-export async function enrollOnly(installDir: string, fleetUrl: string, enrollmentToken: string): Promise<void> {
+export async function enrollOnly(
+  installDir: string,
+  fleetUrl: string,
+  enrollmentToken: string,
+  version: string
+): Promise<void> {
   let command = 'sudo';
   const enrollArgs: Array<string> = [];
   switch (os.platform()) {
@@ -51,7 +58,11 @@ export async function enrollOnly(installDir: string, fleetUrl: string, enrollmen
   enrollArgs.push('--non-interactive');
   enrollArgs.push('--url', fleetUrl);
   enrollArgs.push('--enrollment-token', enrollmentToken);
-  enrollArgs.push('--tag', 'github-actions'); // TODO: add more tags
+
+  // tags are only supported from version 8.3.0
+  if (semver.gte(version, '8.3.0')) {
+    enrollArgs.push('--tag', `github-actions,${os.platform()},${os.arch()}`);
+  }
 
   core.info(`Enrolling into Fleet...`);
   await exec
