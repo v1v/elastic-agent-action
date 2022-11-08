@@ -61,7 +61,7 @@ export async function enrollOnly(
 
   // tags are only supported from version 8.3.0
   if (semver.gte(version, '8.3.0')) {
-    enrollArgs.push('--tag', `github-actions,${os.platform()},${os.arch()}`);
+    enrollArgs.push('--tag', `github-actions,${github.context.repo.repo},${os.platform()},${os.arch()}`);
   }
 
   core.info(`Enrolling into Fleet...`);
