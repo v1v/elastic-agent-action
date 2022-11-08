@@ -2,6 +2,7 @@ import {expect, jest, test} from '@jest/globals';
 import {enrollOnly, unenroll} from '../src/elastic-agent';
 import * as path from 'path';
 import * as exec from '@actions/exec';
+import * as github from '@actions/github';
 import osm = require('os');
 
 process.env['RUNNER_TEMP'] = path.join(__dirname, 'runner');
@@ -19,6 +20,15 @@ test('enrollOnly calls exec Linux', async () => {
 
   jest.spyOn(osm, 'platform').mockImplementation(() => 'linux');
   jest.spyOn(osm, 'arch').mockImplementation(() => 'x64');
+
+  // Mock github context
+  jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
+    return {
+      owner: 'some-owner',
+      repo: 'some-repo'
+    };
+  });
+
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
@@ -34,7 +44,7 @@ test('enrollOnly calls exec Linux', async () => {
       '--enrollment-token',
       token,
       '--tag',
-      'github-actions,linux,x64'
+      'github-actions,some-repo,linux,x64'
     ],
     {
       input: Buffer.from(token),
@@ -58,6 +68,14 @@ test('enrollOnly calls exec MacOS', async () => {
   jest.spyOn(osm, 'platform').mockImplementation(() => 'darwin');
   jest.spyOn(osm, 'arch').mockImplementation(() => 'x64');
 
+  // Mock github context
+  jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
+    return {
+      owner: 'some-owner',
+      repo: 'some-repo'
+    };
+  });
+
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
@@ -73,7 +91,7 @@ test('enrollOnly calls exec MacOS', async () => {
       '--enrollment-token',
       token,
       '--tag',
-      'github-actions,darwin,x64'
+      'github-actions,some-repo,darwin,x64'
     ],
     {
       input: Buffer.from(token),
@@ -97,6 +115,14 @@ test('enrollOnly calls exec Windows', async () => {
   jest.spyOn(osm, 'platform').mockImplementation(() => 'win32');
   jest.spyOn(osm, 'arch').mockImplementation(() => 'x64');
 
+  // Mock github context
+  jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
+    return {
+      owner: 'some-owner',
+      repo: 'some-repo'
+    };
+  });
+
   const token = 'my-token';
   const fleetUrl = 'https://my-fleet';
 
@@ -111,7 +137,7 @@ test('enrollOnly calls exec Windows', async () => {
       '--enrollment-token',
       token,
       '--tag',
-      'github-actions,win32,x64'
+      'github-actions,some-repo,win32,x64'
     ],
     {
       input: Buffer.from(token),
