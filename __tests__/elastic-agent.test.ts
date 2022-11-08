@@ -103,7 +103,16 @@ test('enrollOnly calls exec Windows', async () => {
   await enrollOnly('c:\\temp', fleetUrl, token, '8.3.1');
   expect(execSpy).toHaveBeenCalledWith(
     'c:\\temp\\elastic-agent.exe',
-    ['install', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token, '--tag', 'github-actions,win32,x64'],
+    [
+      'install',
+      '--non-interactive',
+      '--url',
+      fleetUrl,
+      '--enrollment-token',
+      token,
+      '--tag',
+      'github-actions,win32,x64'
+    ],
     {
       input: Buffer.from(token),
       silent: true,
@@ -111,7 +120,6 @@ test('enrollOnly calls exec Windows', async () => {
     }
   );
 });
-
 
 test('enrollOnly calls exec Linux with version lt 8.3.0', async () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -132,15 +140,7 @@ test('enrollOnly calls exec Linux with version lt 8.3.0', async () => {
   await enrollOnly('/tmp', fleetUrl, token, '8.2.0');
   expect(execSpy).toHaveBeenCalledWith(
     `sudo`,
-    [
-      '/tmp/elastic-agent',
-      'install',
-      '--non-interactive',
-      '--url',
-      fleetUrl,
-      '--enrollment-token',
-      token
-    ],
+    ['/tmp/elastic-agent', 'install', '--non-interactive', '--url', fleetUrl, '--enrollment-token', token],
     {
       input: Buffer.from(token),
       silent: true,
