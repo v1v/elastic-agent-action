@@ -3,8 +3,8 @@ name: 'Elastic Agent'
 description: 'GitHub Action to install Elastic Agent to add monitoring for logs, metrics, and other types of data to the GitHub runner'
 author: 'v1v'
 branding:
-  icon: 'anchor'
-  color: 'blue'
+  icon: 'activity'
+  color: 'orange'
 
 inputs:
   fleetUrl:
