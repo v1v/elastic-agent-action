@@ -4,13 +4,12 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 10 * * *'
-  push:
-    branches:
-      - 'main'
-      - 'releases/v*'
-  pull_request:
-    branches:
-      - 'main'
+  workflow_run:
+    workflows:
+      - test
+    types:
+      - completed
+
 env:
   VERSION: 8.5.0
 
