@@ -55,3 +55,25 @@ jobs:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
           version: ${{ env.VERSION }}
+
+  notify-status:
+    if: ${{ always() }}
+    needs: [logout, elasticAgentVersion]
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: LouisBrunner/checks-action@v1.1.1
+        if: ${{ failure() }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ci workflow failed
+          conclusion: failure
+
+      -
+        uses: LouisBrunner/checks-action@v1.1.1
+        if: ${{ success() }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ci workflow success
+          conclusion: success
+
