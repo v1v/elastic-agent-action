@@ -14,6 +14,23 @@ env:
   VERSION: 8.5.0
 
 jobs:
+
+  notify-pre-status:
+    if: ${{ github.event.workflow_run }}
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: LouisBrunner/checks-action@v1.1.1
+        if: ${{ success() }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ci workflow
+          conclusion: neutral
+          sha: ${{ github.event.workflow_run.head_sha }}
+          #action_url:
+          output: |
+            {"summary":"running","text_description":"CI Workflow running"}
+
   logout:
     runs-on: ubuntu-latest
     strategy:
@@ -66,16 +83,20 @@ jobs:
         if: ${{ failure() }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: ci workflow failed
+          name: ci workflow
           conclusion: failure
           sha: ${{ github.event.workflow_run.head_sha }}
+          output: |
+            {"summary":"failed","text_description":"CI Workflow failed"}
 
       -
         uses: LouisBrunner/checks-action@v1.1.1
         if: ${{ success() }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: ci workflow success
+          name: ci workflow
           conclusion: success
           sha: ${{ github.event.workflow_run.head_sha }}
+          output: |
+            {"summary":"passed","text_description":"CI Workflow passed"}
 
