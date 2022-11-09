@@ -57,7 +57,7 @@ jobs:
           version: ${{ env.VERSION }}
 
   notify-status:
-    if: ${{ always() }}
+    if: ${{ always() && github.event.workflow_run }}
     needs: [logout, elasticAgentVersion]
     runs-on: ubuntu-latest
     steps:
@@ -68,6 +68,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ci workflow failed
           conclusion: failure
+          sha: ${{ github.event.workflow_run.head_sha }}
 
       -
         uses: LouisBrunner/checks-action@v1.1.1
@@ -76,4 +77,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ci workflow success
           conclusion: success
+          sha: ${{ github.event.workflow_run.head_sha }}
 
