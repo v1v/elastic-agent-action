@@ -34,7 +34,7 @@ jobs:
     steps:
       -
         name: Install and Configure Elastic agent
-        uses: v1v/elastic-agent-action@main
+        uses: v1v/elastic-agent-action@v1
         with:
           fleetUrl: ${{ secrets.FLEET_URL }}
           enrollmentToken: ${{ secrets.FLEET_ENROLLMENT_TOKEN }}
