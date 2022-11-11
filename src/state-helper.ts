@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 
-export const IsPost = !!process.env['STATE_isPost'];
-export const fleetUrl = process.env['STATE_fleetUrl'] || '';
-export const installDir = process.env['STATE_installDir'] || '';
-export const logout = /true/i.test(process.env['STATE_logout'] || '');
+export const IsPost = !!core.getState('isPost');
+export const fleetUrl = core.getState('fleetUrl');
+export const installDir = core.getState('installDir');
+export const logout = /true/i.test(core.getState('logout'));
 
 export function setInstallDir(installDir: string) {
   core.saveState('installDir', installDir);
