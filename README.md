@@ -1,6 +1,6 @@
 [![GitHub release](https://img.shields.io/github/release/v1v/elastic-agent-action.svg?style=flat-square)](https://github.com/v1v/elastic-agent-action/releases/latest)
-[![CI workflow](https://img.shields.io/github/workflow/status/v1v/elastic-agent-action/ci?label=ci&logo=github&style=flat-square)](https://github.com/v1v/elastic-agent-action/actions?workflow=ci)
-[![Test workflow](https://img.shields.io/github/workflow/status/v1v/elastic-agent-action/test?label=test&logo=github&style=flat-square)](https://github.com/v1v/elastic-agent-action/actions?workflow=test)
+[![CI Workflow](https://github.com/v1v/elastic-agent-action/actions/workflows/ci.yml/badge.svg)](https://github.com/v1v/elastic-agent-action/actions/workflows/ci.yml)
+[![Test workflow](https://github.com/v1v/elastic-agent-action/actions/workflows/test.yml/badge.svg)](https://github.com/v1v/elastic-agent-action/actions/workflows/test.yml)
 
 ## About
 
