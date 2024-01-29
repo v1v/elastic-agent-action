@@ -31,11 +31,11 @@
     "@actions/http-client": "^2.0.1",
     "@actions/io": "^1.1.2",
     "@actions/tool-cache": "^1.5.5",
-    "semver": "^7.3.8"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
-    "@types/semver": "^7.3.13",
+    "@types/semver": "^7.5.6",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.42.1",
     "@vercel/ncc": "^0.33.3",
