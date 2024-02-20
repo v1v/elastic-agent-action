@@ -1,6 +1,6 @@
 {
   "name": "elastic-agent-login",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "private": true,
   "description": "GitHub Action to install Elastic Agent to add monitoring for logs, metrics, and other types of data to the GitHub runner.",
   "main": "lib/main.js",
