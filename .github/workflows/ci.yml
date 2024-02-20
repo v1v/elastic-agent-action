@@ -11,7 +11,7 @@ on:
       - completed
 
 env:
-  VERSION: 8.5.0
+  VERSION: "{{ vars.VERSION }}"
 
 jobs:
 
