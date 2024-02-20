@@ -11,7 +11,7 @@ on:
       - completed
 
 env:
-  VERSION: "{{ vars.VERSION }}"
+  VERSION: "${{ vars.VERSION }}"
 
 jobs:
 
